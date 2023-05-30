@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    #container {
+      margin: 20px auto;
+      width: 400px;
+    }
+
+    h1, h2, h3 {
+      text-align: center;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    li:last-child {
+      border-bottom: none;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: #ccc;
+    }
+
+    button {
+      padding: 5px 10px;
+      margin-left: 10px;
+      background-color: #ccc;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>To-Do App</h1>
+    <input type="text" id="taskInput" placeholder="Add a task...">
+    <button onclick="addTask()">Add Task</button>
+    <h2>Pending Tasks</h2>
+    <ul id="pendingList"></ul>
+    <h2>Completed Tasks</h2>
+    <ul id="completedList"></ul>
+  </div>
+
+  <script>
+    // Array to store tasks
+    let tasks = [];
+
+    // Function to add a new task
+    function addTask() {
+      const taskInput = document.getElementById('taskInput');
+      const taskText = taskInput.value.trim();
+
+      if (taskText !== '') {
+        const task = {
+          text: taskText,
+          completed: false,
+          timestamp: new Date()
+        };
+
+        tasks.push(task);
+
+        taskInput.value = '';
+        showTasks();
+      }
+    }
+
+    // Function to show tasks on the page
+    function showTasks() {
+      const pendingList = document.getElementById('pendingList');
+      const completedList = document.getElementById('completedList');
+
+      // Clear the lists
+      pendingList.innerHTML = '';
+      completedList.innerHTML = '';
+
+      // Add tasks to the appropriate lists
+      tasks.forEach((task, index) => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+          <span class="${task.completed ? 'completed' : ''}">${task.text}</span>
+          <div>
+            <button onclick="completeTask(${index})">${task.completed ? 'Undo' : 'Complete'}</button>
+            <button onclick="deleteTask(${index})">Delete</button>
+          </div>
+        `;
+
+        if (task.completed) {
+          completedList.appendChild(listItem);
+        } else {
+          pendingList.appendChild(listItem);
+        }
+      });
+    }
+
+    // Function to mark a task as complete or undo
+    function completeTask(index) {
+      tasks[index].completed = !tasks[index].completed;
+      showTasks();
+    }
+
+    // Function to delete a task
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      showTasks();
+    }
+  </script>
+</body>
+</html>
